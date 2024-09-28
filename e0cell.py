@@ -1,11 +1,15 @@
 from tkinter import *
 from tkinter import ttk,messagebox
 from PIL import Image,ImageTk
+#for images
 
+#creating main tkinter base
 root = Tk()
 root.title("E*cell Calculator")
+#making it full screened
 root.state('zoomed')
 
+#creating canvases
 canvas =Canvas(root, highlightthickness=7, highlightbackground="black")
 canvas.pack(fill=BOTH, expand=True)
 
@@ -17,6 +21,7 @@ con.place(x=6,y=4)
 l=Label(con,text=' E*cell Calculator ', font=('Times', 40))
 l.place(x=283,y=20)
 
+#placing images
 image=Image.open('be.png')
 img= ImageTk.PhotoImage(image)
 con.create_image(205,200,anchor=NW,image=img)
@@ -25,18 +30,26 @@ ig1=ImageTk.PhotoImage(i1)
 i2=Image.open('el.png').resize((72, 288))
 ig2=ImageTk.PhotoImage(i2)
 
+#values to be inserted
 n1,n2=StringVar(),StringVar()
+
+#creating class for function
 class GalvanicCell():
 
     def __init__(self, ec_series):
         self.ec_series = ec_series
         self.anode,self.cathode = None,None
-
+        
+    #figures out anode and cathode
     def checker(self):
+        #places image
         con.create_image((255,257),anchor=NW,image=ig1)
         con.create_image((657,247),anchor=NW,image=ig2)
-        
+
+        #takes in input
         m1,m2=n1.get(),n2.get()
+
+        #figuring anode and cathode
         if m1!=m2:
             if self.ec_series[m1] > self.ec_series[m2]:
                 self.anode,self.cathode= m2, m1
@@ -47,7 +60,8 @@ class GalvanicCell():
             l2=Label(canvas,text=f"E*cell is {enotcell}", font=('Times', 18)).place(x=1150,y=550)
         else:
             messagebox.showinfo("Error", "Can't enter same metal")
-  
+
+    #taking in values
     def enotcellcalc(self):
         sep2=Canvas(canvas,width=523,height=650,highlightthickness=3, highlightbackground="black")
         sep2.place(x=1000,y=4)
@@ -64,7 +78,8 @@ class GalvanicCell():
         for i in ec_series:
             l5=Label(sep3,font=('Times', 17),text=i).place(x=200,y=j)
             j+=30
-
+            
+#dictionary of values
 ec_series = {
     "Li": -3.05,
     "K": -2.925,
@@ -88,12 +103,17 @@ ec_series = {
     "Au": +1.50,
     "F2": +2.87
 }
+
+#calling function
 cell = GalvanicCell(ec_series)
 
+#adding and placing buttons
 b1 =Button(canvas,width=30,bg='light blue', text='Calculate E*cell', font=('Times', 19),cursor='hand2',command=cell.enotcellcalc)
 b1.place(x=63, y=700)
 b2=Button(canvas, width=30, bg='light blue',text='Display elements', font=('Times', 19),cursor='hand2',command=cell.dis)
 b2.place(x=550, y=700)
 b3=Button(canvas,width=30,bg='light blue', text='Exit', font=('Times', 19),cursor='hand2',command=root.destroy)
 b3.place(x=1037, y=700)
+
+#executing tkinter as loop
 root.mainloop()
